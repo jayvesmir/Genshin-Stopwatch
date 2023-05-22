@@ -16,15 +16,6 @@ class addTimer(qtw.QDockWidget):
         self.setAllowedAreas(Qt.RightDockWidgetArea)
         self.setFeatures(self.DockWidgetClosable)
 
-        self.setStyleSheet(
-            '''
-            
-            QLabel, QPushButton{
-                font-size: 18px;
-            }
-
-            ''')
-
         # Central Frame
         self.centralFrame = qtw.QFrame(self)
 
@@ -391,7 +382,7 @@ class addTimer(qtw.QDockWidget):
         nameText = self.nameLineEdit.text()
         name = nameText if len(nameText) > 0 else timeObject
 
-        centralWidget_: centralWidget = self.parent().findChild(qtw.QWidget, 'central widget')
+        centralWidget_: centralWidget = self.parent().findChild(qtw.QWidget, 'centralWidget')
 
         centralWidget_.addStopWatch(timeObject, duration, name, duration, color)
     
@@ -443,20 +434,6 @@ class optionsDock(qtw.QDockWidget):
         self.setObjectName('optionsDockWidget')
         self.setAllowedAreas(Qt.RightDockWidgetArea)
         self.setFeatures(self.DockWidgetClosable)
-
-        self.setStyleSheet(
-            '''
-            
-            QLabel, QPushButton{
-                font-size: 18px;
-            }
-
-            QCheckBox::indictator{
-                width: 40px;
-                length: 40px;
-            }
-
-            ''')
 
         # Central Frame
         self.centralFrame = qtw.QFrame(self)
@@ -572,13 +549,6 @@ class toolbar(qtw.QToolBar):
 
         self.layout().setSpacing(20)
 
-        self.setStyleSheet(
-            '''
-            QToolButton{
-                font-size: 18px;
-            }
-            ''')
-
         # Add Timer Button
         self.addTimerButton = qtw.QAction('Add Timer', self)
         self.addTimerButton.setObjectName('addTimerButton')
@@ -612,69 +582,7 @@ class centralWidget(qtw.QWidget):
     def __init__(self, parent=None | qtw.QMainWindow):
         super().__init__(parent)
 
-        self.setStyleSheet(
-            '''
-            QWidget{
-                background-color: #1A1A1B;
-                border: none;
-            }
-
-            QScrollBar:vertical {
-                border: none;
-                background-color: #1A1A1B;
-                width: 14px;
-                margin: 15px 0 15px 0;
-                border-radius: 0px;
-                
-            }
-
-            QScrollBar::handle:vertical {
-                background-color: #37AA9C;
-                min-height: 30px;
-                border-radius: 7px;
-            }
-
-            QScrollBar::handle:vertical:hover {
-                background-color: #37AA9C;
-            }
-
-            QScrollBar::handle:vertical:pressed {
-                background-color: #94F3E4;
-                min-height: 30px;
-                border-radius: 7px;
-            }
-
-            QScrollBar::sub-line:vertical {
-                border: none;
-                background-color: #333F44;
-                height: 15px;
-                border-top-left-radius: 7px;
-                border-top-right-radius: 7px;
-                subcontrol-position: top;
-                subcontrol-origin: margin;
-            }
-
-            QScrollBar::add-line:vertical {
-                border: none;
-                background-color: #333F44;
-                height: 15px;
-                border-bottom-left-radius: 7px;
-                border-bottom-right-radius: 7px;
-                subcontrol-position: bottom;
-                subcontrol-origin: margin;
-            }
-
-            QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
-                background: none;
-            }
-
-            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-                background: none;
-            }
-
-            ''')
-
-        self.setObjectName('central widget')
+        self.setObjectName('centralWidget')
         self.scrollAreaLayout = qtw.QHBoxLayout(self)
         self.scrollAreaLayout.setContentsMargins(0,0,0,0)
         self.verticalLayout = qtw.QVBoxLayout()
@@ -709,9 +617,12 @@ class centralWidget(qtw.QWidget):
                 text-align: center;
             }}
 
-            QLabel[finished="true"]{{
-                color: #FCB3FC;
-            }}
+            QTextEdit {{
+                background-color: #1A1A1B;
+                color: #94F3E4;
+                font-size: 24px;
+                border: none;
+            }}   
 
             QPushButton:pressed{{
                 background-color: #37AA9C;
@@ -720,6 +631,7 @@ class centralWidget(qtw.QWidget):
             
 
         '''.format(color))
+        
         id_ = str(id(self.frame))
         self.frame.setObjectName(id_)
         self.frame.setMaximumHeight(500)
@@ -757,7 +669,14 @@ class centralWidget(qtw.QWidget):
 
         countDown = qtw.QLabel('00:00:00', self.frame)
         countDown.setObjectName(f'{id_}CountDownLabel')
-        countDown.setStyleSheet('font-size: 70px;')
+        countDown.setStyleSheet(
+            '''
+            QLabel[finished="true"]{
+                color: #FCB3FC;
+                font-size: 70px;
+            }
+            
+            ''')
         frameLayout.addWidget(countDown, 1, 0, 1, 3, alignment=Qt.AlignCenter)
 
         resetButton = qtw.QPushButton('Reset Timer', self.frame)
@@ -779,13 +698,7 @@ class centralWidget(qtw.QWidget):
         notepad.setMinimumSize(300, 100)
         notepad.setMaximumSize(400, 200)
         notepad.anchorAt(QPoint(0,0))
-        notepad.setStyleSheet(
-            '''
-            background: #1A1A1B;
-            color: #94F3E4;
-            font-size: 24px;
-            border: none;
-            ''')
+
         frameLayout.addWidget(notepad, 2, 2)
 
         self.frame.setLayout(frameLayout)
@@ -875,60 +788,6 @@ class centralWidget(qtw.QWidget):
 class window(qtw.QMainWindow):
     def __init__(self):
         super(window, self).__init__()
-
-        # Application Stylesheet
-        self.setStyleSheet(
-            '''
-            QMainWindow{
-                background-color: #1A1A1B;
-            }
-
-            QToolBar{
-                background-color: #333F44;
-            }
-
-            QToolButton, QPushButton{
-                background-color: #333F44;
-                color: #94F3E4;
-                font-size: 15px;
-            }
-
-            QToolButton:hover, QPushButton:hover {
-                background-color: #333F44
-            }
-
-            QToolButton:pressed, QPushButton:pressed {
-                background-color: #37AA9C
-            }
-
-            QLineEdit{
-                font-size: 20px;
-                background-color: #333F44;
-                color: #94F3E4;
-            }
-
-            QComboBox{
-                background: #333F44;
-                color: #94F3E4;
-                font-size: 20px;
-            }
-
-            QListView{
-                background-color: #333F44;
-                color: #94F3E4;
-            }
-
-            QComboBox QAbstractItemView {
-                selection-background-color: #1A1A1B;
-                border: none;
-            }
-
-            QLabel{
-                color: #94F3E4;
-            }
-
-            '''
-        )
 
         self.toolBar = toolbar(self)
         self.addToolBar(self.toolBar)
@@ -1084,6 +943,120 @@ if __name__ == '__main__':
 
     app: qtw.QApplication = qtw.QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
+    app.setStyleSheet('''
+
+            
+        QMainWindow{
+            background-color: #1A1A1B;
+        }
+
+        QToolBar{
+            background-color: #333F44;
+        }
+
+        QWidget#centralWidget * {
+            background-color: #1A1A1B;
+            border: none;
+        }
+
+        QToolButton, QPushButton{
+            background-color: #333F44;
+            color: #94F3E4;
+            font-size: 18px;
+        }
+
+        QToolButton:hover, QPushButton:hover {
+            background-color: #333F44
+        }
+
+        QToolButton:pressed, QPushButton:pressed {
+            background-color: #37AA9C
+        }
+
+        QCheckBox::indictator{
+            width: 40px;
+            length: 40px;
+        }
+
+        QLineEdit{
+            font-size: 20px;
+            background-color: #333F44;
+            color: #94F3E4;
+        }
+
+        QComboBox {
+            background: #333F44;
+            color: #94F3E4;
+            font-size: 20px;
+            selection-background-color: #1A1A1B;
+            border: none;
+        }
+
+        QListView, QAbstractScrollArea {
+            background-color: #333F44;
+            color: #94F3E4;
+            border: none;
+        }
+
+        QLabel{
+            color: #94F3E4;
+            font-size: 18px;
+        }
+
+        QScrollBar:vertical {
+            border: none;
+            background-color: #1A1A1B;
+            width: 14px;
+            margin: 15px 0 15px 0;
+            border-radius: 0px;
+            
+        }
+
+        QScrollBar::handle:vertical {
+            background-color: #37AA9C;
+            min-height: 30px;
+            border-radius: 7px;
+        }
+
+        QScrollBar::handle:vertical:hover {
+            background-color: #37AA9C;
+        }
+
+        QScrollBar::handle:vertical:pressed {
+            background-color: #94F3E4;
+            min-height: 30px;
+            border-radius: 7px;
+        }
+
+        QScrollBar::sub-line:vertical {
+            border: none;
+            background-color: #333F44;
+            height: 15px;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+
+        QScrollBar::add-line:vertical {
+            border: none;
+            background-color: #333F44;
+            height: 15px;
+            border-bottom-left-radius: 7px;
+            border-bottom-right-radius: 7px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+
+        QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+            background: none;
+        }
+
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+            background: none;
+        }
+
+            ''')
 
     mw = window()
 
