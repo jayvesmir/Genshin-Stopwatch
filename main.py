@@ -4,8 +4,20 @@ from PyQt5.QtCore import Qt, QPoint, QTimer
 
 import datetime
 from configparser import ConfigParser
-
 from win10toast import ToastNotifier
+
+import style
+
+# Global style manager
+styleManager: style.StyleManager = style.StyleManager()
+
+styleManager.appendGlobalStyle(style.label)
+styleManager.appendGlobalStyle(style.checkbox)
+styleManager.appendGlobalStyle(style.toolButton)
+
+styleManager.appendLocalStyle('window', style.window)
+styleManager.appendLocalStyle('stopwatch', style.stopwatch)
+styleManager.appendLocalStyle('central widget', style.centralWidget)
 
 class addTimer(qtw.QDockWidget):
     def __init__(self, parent=None | qtw.QMainWindow):
@@ -15,6 +27,8 @@ class addTimer(qtw.QDockWidget):
         self.setObjectName('addTimerDockWidget')
         self.setAllowedAreas(Qt.RightDockWidgetArea)
         self.setFeatures(self.DockWidgetClosable)
+
+        self.setStyleSheet(styleManager.getGlobalStyleString())
 
         # Central Frame
         self.centralFrame = qtw.QFrame(self)
@@ -435,6 +449,8 @@ class optionsDock(qtw.QDockWidget):
         self.setAllowedAreas(Qt.RightDockWidgetArea)
         self.setFeatures(self.DockWidgetClosable)
 
+        self.setStyleSheet(styleManager.getGlobalStyleString())
+
         # Central Frame
         self.centralFrame = qtw.QFrame(self)
 
@@ -549,6 +565,8 @@ class toolbar(qtw.QToolBar):
 
         self.layout().setSpacing(20)
 
+        self.setStyleSheet(styleManager.getGlobalStyleString())
+
         # Add Timer Button
         self.addTimerButton = qtw.QAction('Add Timer', self)
         self.addTimerButton.setObjectName('addTimerButton')
@@ -582,7 +600,9 @@ class centralWidget(qtw.QWidget):
     def __init__(self, parent=None | qtw.QMainWindow):
         super().__init__(parent)
 
-        self.setObjectName('centralWidget')
+        self.setStyleSheet(styleManager.getLocalStyleString('central widget'))
+
+        self.setObjectName('central widget')
         self.scrollAreaLayout = qtw.QHBoxLayout(self)
         self.scrollAreaLayout.setContentsMargins(0,0,0,0)
         self.verticalLayout = qtw.QVBoxLayout()
@@ -602,36 +622,14 @@ class centralWidget(qtw.QWidget):
     def addStopWatch(self, timeObject: str, duration: datetime.timedelta, name: str, startDuration: datetime.timedelta, color: str, notepadContents: str = '', index: int | None = None, save: bool = True) -> None:
         
         self.frame = qtw.QFrame(self.scrollAreaWidgetContents)
-        self.frame.setStyleSheet('''
-
+        self.frame.setStyleSheet(styleManager.getLocalStyleString('stopwatch') + '''
             QFrame {{
                 border: 3px solid {0};
                 border-radius: 10px;
                 background-color: #333F44;
             }}
-
-            QLabel {{
-                font-size: 30px;
-                color: #94F3E4;
-                border: none;
-                text-align: center;
-            }}
-
-            QTextEdit {{
-                background-color: #1A1A1B;
-                color: #94F3E4;
-                font-size: 24px;
-                border: none;
-            }}   
-
-            QPushButton:pressed{{
-                background-color: #37AA9C;
-            }}
-
-            
-
         '''.format(color))
-        
+
         id_ = str(id(self.frame))
         self.frame.setObjectName(id_)
         self.frame.setMaximumHeight(500)
@@ -788,6 +786,9 @@ class centralWidget(qtw.QWidget):
 class window(qtw.QMainWindow):
     def __init__(self):
         super(window, self).__init__()
+
+        # Application Stylesheet
+        self.setStyleSheet(styleManager.getLocalStyleString('window'))
 
         self.toolBar = toolbar(self)
         self.addToolBar(self.toolBar)
